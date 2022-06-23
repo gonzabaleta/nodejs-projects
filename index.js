@@ -1,4 +1,3 @@
-const { engine } = require("express-handlebars"); // Require Handlebars
 const express = require("express"); // Require Express
 const { Router } = express; // Initialize Router class
 
@@ -11,8 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Set up Template Engines
-app.engine("handlebars", engine());
-app.set("view engine", "handlebars");
+app.set("view engine", "ejs");
 app.set("views", "./views");
 
 // Initialize products
