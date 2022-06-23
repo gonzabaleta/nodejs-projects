@@ -4,7 +4,6 @@ const getDefaultProducts = () => [
     title: "Fideos",
     price: 80,
   },
-
   {
     id: 2,
     title: "Arroz",

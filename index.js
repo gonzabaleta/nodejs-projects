@@ -18,7 +18,7 @@ app.set("views", "./views");
 // Initialize products
 const { getDefaultProducts } = require("./getDefaultProducts.js");
 const products = getDefaultProducts();
-let prodID = products[products.length - 1].id;
+let prodID = products[products.length - 1]?.id || 0;
 
 /**************
  * STATIC *
