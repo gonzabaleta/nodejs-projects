@@ -1,11 +1,11 @@
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Handlebars!</title>
-    <style>
-
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title PugJS!
+    style.
       * { box-sizing: border-box; margin: 0; } body { font-family: sans-serif;
       padding: 20px;} .form-main { width: min(100%, 500px); border-radius: 20px;
       margin: 0 auto 40px; padding: 20px 50px; background-color: rgba(97, 123,
@@ -19,11 +19,8 @@
       margin-top: 5px;} .products { width: min(100%, 500px); margin: 0 auto;
       background-color: rgba(97, 123, 165, 0.406); border-radius: 20px; padding:
       20px 50px; margin-bottom: 40px} .product-row { padding: 10px 0;
-      border-bottom: 1px solid gray; } h2 { font-size: 18px; margin-bottom: 7px;
+      border-bottom: 1px solid gray; font-size: 16px;} h2 { font-size: 18px; margin-bottom: 7px;
       }
-    </style>
-  </head>
-  <body>
-    {{{body}}}
-  </body>
-</html>
+    
+  body 
+    block content

@@ -1,0 +1,12 @@
+extends layouts/main.pug
+
+block content 
+  .products 
+    h1 Productos 
+      each prod in products
+        .product-row 
+          h2=prod.title 
+          p  Precio: $#{prod.price} 
+      else 
+        h2 No se encontraron productos :(
+  a.button(href="/") Agregar producto

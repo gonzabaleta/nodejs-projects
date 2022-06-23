@@ -1,0 +1,14 @@
+extends layouts/main.pug
+
+block content 
+  form(class="form-main" action="/api/productos" method="post")
+    h1 Agrega un producto 
+    .input-div 
+      label(for="title") Título 
+      input.text-input(type="text" name="title")
+    .input-div 
+      label(for="price") Precio 
+      input.text-input(type="number" name="price")
+    input(type="submit" value="Agregar").button
+
+  a(href="/productos").button Ver productos
