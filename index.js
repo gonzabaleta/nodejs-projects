@@ -1,21 +1,39 @@
-const express = require("express");
+const { engine } = require("express-handlebars"); // Require Handlebars
+const express = require("express"); // Require Express
+const { Router } = express; // Initialize Router class
 
-const { Router } = express;
+const app = express(); // Initialize App
+const api = Router(); // Initialize API Router
+const static = Router(); // Initialize Static Router
 
-const app = express();
-const router = Router();
-
+// Set up middleware
 app.use(express.json());
-app.use(express.static(__dirname + "/public"));
 app.use(express.urlencoded({ extended: true }));
 
+// Set up Template Engines
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", "./views");
+
+// Initialize products
 const { getDefaultProducts } = require("./getDefaultProducts.js");
-
 const products = getDefaultProducts();
-
 let prodID = products[products.length - 1].id;
 
-router
+/**************
+ * STATIC *
+ **************/
+static.route("/").get((req, res) => res.render("index"));
+
+static
+  .route("/productos")
+  .get((req, res) => res.render("products", { products }));
+
+/**************
+ * API *
+ **************/
+// PRODUCTOS
+api
   .route("/productos")
 
   // GET: Devuelve todos los productos
@@ -29,7 +47,7 @@ router
     const producto = { id, ...data };
     products.push(producto);
 
-    res.json(producto);
+    res.redirect("/");
   });
 
 // Middleware para buscar el producto en las rutas con params
@@ -45,7 +63,8 @@ const findProduct = (req, res, next) => {
   }
 };
 
-router
+// PRODUCTOS/ID
+api
   .route("/productos/:id")
   .all(findProduct)
 
@@ -75,10 +94,11 @@ router
     res.json(product);
   });
 
-app.use("/api", router);
+// Set up routers
+app.use("/api", api);
+app.use("/", static);
 
+// Initialize Server
 const PORT = 3000;
-
 const server = app.listen(PORT, () => console.log(`Escuchando puerto ${PORT}`));
-
 server.on("error", (err) => res.send(`Error de servidor! ${err}`));
