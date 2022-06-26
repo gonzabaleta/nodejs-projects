@@ -1,23 +1,38 @@
 const express = require("express");
-
-const contenedor = require("./container");
+const { Server: HttpServer } = require("http");
+const { Server: IOServer } = require("socket.io");
 
 const app = express();
+const httpServer = new HttpServer(app);
+const io = new IOServer(httpServer);
 
-app.get("/products", async (req, res) => {
-  const products = await contenedor.getAll();
-  res.send(products);
+app.use(express.static("public"));
+
+const mensajes = [
+  {
+    author: "Juan",
+    text: "Hola! Que tal?",
+  },
+  {
+    author: "Pedro",
+    text: "Muy bien! y vos?",
+  },
+  {
+    author: "Ana",
+    text: "Genial",
+  },
+];
+
+httpServer.listen(3000, function () {
+  console.log("Escuchando en puerto 3000");
 });
 
-app.get("/productoRandom", async (req, res) => {
-  const products = await contenedor.getAll();
-  const min = 0;
-  const max = products.length - 1;
-  const index = Math.floor(Math.random() * (max - min + 1) + min);
-  const selectedProduct = products[index];
-  res.send(selectedProduct);
+io.on("connection", (socket) => {
+  console.log("Un cliente se ha conectado");
+  socket.emit("messages", mensajes);
+
+  socket.on("new-message", (data) => {
+    mensajes.push(data);
+    io.sockets.emit("messages", mensajes);
+  });
 });
-
-const PORT = process.env.port || 8080;
-
-const server = app.listen(PORT, () => console.log("escuchando puerto " + 8080));
