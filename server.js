@@ -23,8 +23,10 @@ const mensajes = [
   },
 ];
 
-httpServer.listen(3000, function () {
-  console.log("Escuchando en puerto 3000");
+const PORT = process.env.PORT || 8080;
+
+httpServer.listen(PORT, function () {
+  console.log(`Escuchando en puerto ${PORT}`);
 });
 
 io.on("connection", (socket) => {
