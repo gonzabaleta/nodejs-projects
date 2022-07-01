@@ -2,7 +2,14 @@ const { engine } = require("express-handlebars"); // Require Handlebars
 const express = require("express"); // Require Express
 const { Router } = express; // Initialize Router class
 
+const { Server: HttpServer } = require("http");
+const { Server: IOServer } = require("socket.io");
+
+// Initialize servers
 const app = express(); // Initialize App
+const httpServer = new HttpServer(app);
+const io = new IOServer(httpServer);
+
 const api = Router(); // Initialize API Router
 const static = Router(); // Initialize Static Router
 
@@ -14,11 +21,19 @@ app.use(express.urlencoded({ extended: true }));
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 app.set("views", "./views");
+app.use(express.static(__dirname + "/public"));
 
 // Initialize products
 const { getDefaultProducts } = require("./getDefaultProducts.js");
 const products = getDefaultProducts();
+
 let prodID = products[products.length - 1]?.id || 0;
+
+//  Initialize messages
+const { getDefaultMessages } = require("./getDefaultMessages");
+const messages = getDefaultMessages();
+
+let messageID = messages[messages.length - 1]?.id || 0;
 
 /**************
  * STATIC *
@@ -100,5 +115,24 @@ app.use("/", static);
 
 // Initialize Server
 const PORT = 3000;
-const server = app.listen(PORT, () => console.log(`Escuchando puerto ${PORT}`));
+const server = httpServer.listen(PORT, () =>
+  console.log(`Escuchando puerto ${PORT}`)
+);
 server.on("error", (err) => res.send(`Error de servidor! ${err}`));
+
+io.on("connection", (socket) => {
+  console.log("Un cliente se ha conectado");
+
+  socket.emit("products", products);
+  socket.emit("messages", messages);
+
+  socket.on("new-product", (data) => {
+    products.push({ ...data, id: ++prodID });
+    io.sockets.emit("products", products);
+  });
+
+  socket.on("new-message", (data) => {
+    messages.push({ ...data, id: ++messageID });
+    io.sockets.emit("messages", messages);
+  });
+});
