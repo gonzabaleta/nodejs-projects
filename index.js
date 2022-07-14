@@ -23,15 +23,56 @@ app.set("view engine", "handlebars");
 app.set("views", "./views");
 app.use(express.static(__dirname + "/public"));
 
+// DATABASE
+const { options_mariaDB } = require("./options/mariaDB.js");
+const { options_sqlite3 } = require("./options/sqlite3.js");
+const { ProductsDBContainer } = require("./containers/products");
+const { MessagesDBContainer } = require("./containers/messages");
+
+const messagesDB = new MessagesDBContainer(options_sqlite3, "messages");
+const productsDB = new ProductsDBContainer(options_mariaDB, "products");
+
 // Initialize products
-const { getDefaultProducts } = require("./getDefaultProducts.js");
-const products = getDefaultProducts();
+const products = [];
+
+(async () => {
+  const newProducts = await productsDB.getAllProducts();
+
+  products.push(...newProducts);
+})();
+
+/***************************************
+ RUN TO LOAD DEFAULT PRODUCTS TO DATABASE
+ 
+ productsDB.createTable();
+ const { getDefaultProducts } = require("./getDefaultProducts.js");
+ const products = getDefaultProducts();
+ 
+ productsDB.saveProducts(products);
+ 
+ ***************************************/
 
 let prodID = products[products.length - 1]?.id || 0;
 
 //  Initialize messages
+const messages = [];
+
+(async () => {
+  const newMessages = await messagesDB.getAllMessages();
+
+  messages.push(...newMessages);
+})();
+
+/****************************************
+ RUN TO LOAD DEFAULT MESSAGES TO DATABASE 
+ 
+messagesDB.createTable();
 const { getDefaultMessages } = require("./getDefaultMessages");
 const messages = getDefaultMessages();
+
+messagesDB.saveMessages(messages);
+
+*****************************************/
 
 let messageID = messages[messages.length - 1]?.id || 0;
 
@@ -128,11 +169,13 @@ io.on("connection", (socket) => {
 
   socket.on("new-product", (data) => {
     products.push({ ...data, id: ++prodID });
+    productsDB.saveProducts(data);
     io.sockets.emit("products", products);
   });
 
   socket.on("new-message", (data) => {
     messages.push({ ...data, id: ++messageID });
+    messagesDB.saveMessages(data);
     io.sockets.emit("messages", messages);
   });
 });
