@@ -9,7 +9,6 @@ const app = express(); // Initialize App
 const httpServer = new HttpServer(app);
 
 const api = Router(); // Initialize API Router
-const static = Router(); // Initialize Static Router
 
 // Set up middleware
 app.use(express.json());
@@ -17,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Initialize products
 // const { getDefaultProducts } = require("./getDefaultProducts.js");
-const PATH_PRODUCTS = "./productos.txt";
+const PATH_PRODUCTS = "./productos.json";
 const products = JSON.parse(fs.readFileSync(PATH_PRODUCTS, "utf-8"));
 console.log(products);
 
@@ -26,7 +25,7 @@ let prodID = products[products.length - 1]?.id || 0; // Inicializar el ID con el
 // fs.writeFileSync(PATH_PRODUCTS, JSON.stringify(products));
 
 // Initialize carts
-const PATH_CARTS = "./carts.txt";
+const PATH_CARTS = "./carts.json";
 // const { getDefaultCarts } = require("./getDefaultCarts");
 const carts = JSON.parse(fs.readFileSync(PATH_PRODUCTS, "utf-8"));
 
@@ -38,15 +37,6 @@ const persistProducts = (prods) =>
   fs.writeFileSync(PATH_PRODUCTS, JSON.stringify(prods));
 const persistCarts = (updatedCarts) =>
   fs.writeFileSync(PATH_CARTS, JSON.stringify(updatedCarts));
-
-/**************
- * STATIC *
- **************/
-static.route("/").get((req, res) => res.render("index"));
-
-static
-  .route("/productos")
-  .get((req, res) => res.render("products", { products }));
 
 /**************
  * API *

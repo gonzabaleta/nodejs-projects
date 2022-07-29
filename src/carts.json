@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "products": [
+      {
+        "id": 1,
+        "title": "Fideos",
+        "price": 80,
+        "stock": 150,
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "timestamp": 1657587750069,
+    "products": [
+      {
+        "id": 3,
+        "title": "Queso",
+        "price": 300,
+        "stock": 893,
+        "quantity": 5
+      },
+      {
+        "id": 1,
+        "title": "Fideos",
+        "price": 80,
+        "stock": 150,
+        "quantity": 1
+      }
+    ]
+  }
+]

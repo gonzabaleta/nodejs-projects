@@ -1,0 +1,6 @@
+[
+  { "id": 2, "title": "Actualización prueba", "price": 100, "stock": 483 },
+  { "id": 3, "title": "Queso", "price": 300, "stock": 893 },
+  { "id": 4, "title": "Producto prueba", "price": 3939, "stock": 15 },
+  { "id": 5, "title": "Producto prueba 2", "price": 3939, "stock": 15 }
+]
