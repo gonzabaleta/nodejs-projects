@@ -1,9 +1,11 @@
 const { ProductsFsContainer } = require("../daos/products/products.fs");
 const { ProductsMemoryContainer } = require("../daos/products/products.memory");
 const { ProductsMongoController } = require("../daos/products/products.mongo");
+const {
+  ProductsFirebaseController,
+} = require("../daos/products/products.firebase");
 const { Router } = require("express");
 const router = Router();
-const mongoose = require("mongoose");
 
 const { PERSIST_METHOD, MONGO_ATLAS_URL } = process.env;
 
@@ -21,6 +23,10 @@ switch (PERSIST_METHOD) {
   case "mongo":
     productsContainer = new ProductsMongoController();
     break;
+  case "firebase":
+    productsContainer = new ProductsFirebaseController("products");
+    break;
+
   default:
     throw new Error(
       "Por favor indica un método de persistencia desde las variables de entorno"

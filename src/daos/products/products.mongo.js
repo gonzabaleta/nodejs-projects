@@ -17,7 +17,7 @@ class ProductsMongoController extends MongoController {
 
   createProduct = async (req, res) => {
     const product = req.body;
-    console.log(product);
+
     try {
       if (!product.title || !product.price || !product.stock) {
         throw new Error("Todos los campos son requeridos");

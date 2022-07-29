@@ -17,6 +17,14 @@ if (PERSIST_METHOD === "mongo") {
     useUnifiedTopology: true,
   });
   console.log("MONGO ATLAS CONNECTED");
+} else if (PERSIST_METHOD === "firebase") {
+  const admin = require("firebase-admin");
+  const serviceAccount = require("./db/firebase/coder-ee87b-firebase-adminsdk-sn9i4-115aa27bb2.json");
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+  console.log("FIREBASE INITIALIZED");
 }
 
 // Configure main API router

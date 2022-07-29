@@ -1,6 +1,7 @@
 const { CartsFsContainer } = require("../daos/carts/carts.fs");
 const { CartsMemoryContainer } = require("../daos/carts/carts.memory");
 const { CartsMongoController } = require("../daos/carts/carts.mongo");
+const { CartsFirebaseController } = require("../daos/carts/carts.firebase");
 const { Router } = require("express");
 const router = Router();
 
@@ -17,6 +18,9 @@ switch (PERSIST_METHOD) {
     break;
   case "mongo":
     cartsContainer = new CartsMongoController();
+    break;
+  case "firebase":
+    cartsContainer = new CartsFirebaseController("carts");
     break;
   default:
     throw new Error(
