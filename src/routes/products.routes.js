@@ -1,9 +1,11 @@
 const { ProductsFsContainer } = require("../daos/products/products.fs");
 const { ProductsMemoryContainer } = require("../daos/products/products.memory");
+const { ProductsMongoController } = require("../daos/products/products.mongo");
 const { Router } = require("express");
 const router = Router();
+const mongoose = require("mongoose");
 
-const { PERSIST_METHOD } = process.env;
+const { PERSIST_METHOD, MONGO_ATLAS_URL } = process.env;
 
 let productsContainer;
 
@@ -14,6 +16,10 @@ switch (PERSIST_METHOD) {
     break;
   case "memory":
     productsContainer = new ProductsMemoryContainer();
+    break;
+
+  case "mongo":
+    productsContainer = new ProductsMongoController();
     break;
   default:
     throw new Error(
