@@ -1,3 +1,4 @@
+const { faker } = require("@faker-js/faker");
 const { model } = require("../models/products.model");
 
 class ProductsController {
@@ -37,6 +38,22 @@ class ProductsController {
     } catch (err) {
       throw new Error(`Error: ${err.message}`);
     }
+  };
+
+  getFakeProducts = (req, res) => {
+    const products = [];
+
+    for (let i = 0; i < 5; i++) {
+      const product = {
+        title: faker.commerce.product(),
+        price: faker.commerce.price(),
+        imageURL: faker.image.food(),
+      };
+
+      products.push(product);
+    }
+
+    res.json(products);
   };
 
   createProductFromSocket = async (product) => {

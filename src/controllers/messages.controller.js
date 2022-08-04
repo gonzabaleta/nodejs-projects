@@ -1,4 +1,16 @@
 const { model } = require("../models/messages.model");
+const { normalize, schema, denormalize } = require("normalizr");
+const util = require("util");
+
+const authorSchema = new schema.Entity("authors", {}, { idAttribute: "email" });
+const textSchema = new schema.Entity(
+  "texts",
+  {
+    author: authorSchema,
+  },
+  { idAttribute: "_id" }
+);
+const chatSchema = [textSchema];
 
 class MessagesController {
   constructor() {
@@ -8,7 +20,17 @@ class MessagesController {
   getData = async (req, res) => {
     try {
       const messages = await model.find({});
-      res.json(messages);
+      // console.log(messages);
+      const normalizedMessages = normalize(messages, [textSchema]);
+      // console.log(util.inspect(normalizedMessages, true, 10, true));
+      console.log(
+        denormalize(
+          normalizedMessages.result,
+          [textSchema],
+          normalizedMessages.entities
+        )
+      );
+      res.json(normalizedMessages);
     } catch (err) {
       throw new Error(`Error: ${err.message}`);
     }
