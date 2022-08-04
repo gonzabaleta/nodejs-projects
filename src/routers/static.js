@@ -1,12 +1,14 @@
 const { Router } = require("express");
-const { ProductsController } = require("../controllers/products.controller");
-
+const { model } = require("../models/products.model");
 const router = Router();
-const productsController = new ProductsController();
 
-router.route("/").get((req, res) => res.render("index"));
-router
-  .route("/productos")
-  .get((req, res) => res.render("products"), { products });
+(async () => {
+  const products = await model.find({});
+
+  router.route("/").get((req, res) => res.render("index"));
+  router
+    .route("/productos")
+    .get((req, res) => res.render("productos", { products }));
+})();
 
 module.exports = router;

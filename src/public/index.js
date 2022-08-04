@@ -25,7 +25,7 @@ const renderMessages = (data) => {
 
       const dateString = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
-      return `<div class="message-row"><span class="email">${message.email}</span><span class="date">[${dateString}]</span>: <span class="message-text">${message.message}</span></div>`;
+      return `<div class="message-row"><span class="email">${message.author.email}</span><span class="date">[${dateString}]</span>: <span class="message-text">${message.text}</span></div>`;
     })
     .join("");
 
@@ -59,7 +59,7 @@ document
     const text = document.getElementById("user-message").value;
     const date = new Date();
 
-    const message = { email, message: text, date };
+    const message = { author: { email }, text, date };
 
     socket.emit("new-message", message);
   });

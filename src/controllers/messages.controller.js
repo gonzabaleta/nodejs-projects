@@ -1,11 +1,41 @@
-class MessagesDBContainer {
-  constructor() {}
+const { model } = require("../models/messages.model");
 
-  createTable() {}
+class MessagesController {
+  constructor() {
+    this.messages = [];
+  }
 
-  async saveMessages(messages) {}
+  getData = async (req, res) => {
+    try {
+      const messages = await model.find({});
+      res.json(messages);
+    } catch (err) {
+      throw new Error(`Error: ${err.message}`);
+    }
+  };
 
-  async getAllMessages() {}
+  returnMessages = async () => {
+    try {
+      const messages = await model.find({});
+      return messages;
+    } catch (err) {
+      throw new Error(`Error: ${err.message}`);
+    }
+  };
+
+  createMessageFromSocket = async (message) => {
+    try {
+      if (!message.author || !message.text) {
+        throw new Error("Todos los campos son requeridos");
+      } else {
+        const messageSaveModel = new model(message);
+        const messageSave = await messageSaveModel.save();
+        return messageSave;
+      }
+    } catch (err) {
+      throw new Error(`Error: ${err.message}`);
+    }
+  };
 }
 
-module.exports = { MessagesDBContainer };
+module.exports = { MessagesController };

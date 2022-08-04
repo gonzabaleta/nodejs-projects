@@ -1,7 +1,9 @@
-const { model } = require("../../models/products.model");
+const { model } = require("../models/products.model");
 
 class ProductsController {
-  constructor() {}
+  constructor() {
+    this.products = [];
+  }
 
   getData = async (req, res) => {
     try {
@@ -12,9 +14,9 @@ class ProductsController {
     }
   };
 
-  returnProducts = (async) => {
+  returnProducts = async () => {
     try {
-      const products = await model.find({})
+      const products = await model.find({});
       return products;
     } catch (err) {
       throw new Error(`Error: ${err.message}`);
@@ -25,12 +27,27 @@ class ProductsController {
     const product = req.body;
 
     try {
-      if (!product.title || !product.price || !product.stock) {
+      if (!product.title || !product.price) {
         throw new Error("Todos los campos son requeridos");
       } else {
         const productSaveModel = new model(product);
         await productSaveModel.save();
-        res.json({ msg: "Producto agregado con éxito" });
+        res.json(productSaveModel);
+      }
+    } catch (err) {
+      throw new Error(`Error: ${err.message}`);
+    }
+  };
+
+  createProductFromSocket = async (product) => {
+    product.stock = 300;
+    try {
+      if (!product.title || !product.price) {
+        throw new Error("Todos los campos son requeridos");
+      } else {
+        const productSaveModel = new model(product);
+        const saveProduct = await productSaveModel.save();
+        return saveProduct;
       }
     } catch (err) {
       throw new Error(`Error: ${err.message}`);
