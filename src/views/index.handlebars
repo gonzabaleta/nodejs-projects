@@ -1,3 +1,10 @@
+{{#if renderUser}}
+  <div class="form-main">
+    <h1>Bienvenido, {{user}}</h1>
+    <a href="/logout" class="button">Cerrar sesión</a>
+  </div>
+{{/if}}
+
 <form id="form-main" class="form-main" action="/api/productos" method="post">
   <h1>Agrega un producto</h1>
   <div class="input-div">

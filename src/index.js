@@ -32,6 +32,31 @@ mongoose.connect(URL, {
   useUnifiedTopology: true,
 });
 
+// Set up Session
+const session = require("express-session");
+const connectMongo = require("connect-mongo");
+const MongoStore = connectMongo.create({
+  mongoUrl: MONGO_ATLAS_URL,
+  mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+});
+
+app.use(
+  session({
+    store: MongoStore,
+    secret: "secreto",
+    cookie: { maxAge: 10 * 60 * 1000 }, // Ponemos una maxAge de 10 minutos
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+// Middleware que resetea la maxAge a 10 minutos cuando el usuario ingresa al sitio
+app.use(function (req, res, next) {
+  req.session._garbage = Date();
+  req.session.touch();
+  next();
+});
+
 // Set up routers
 app.use("/", router);
 
