@@ -1,15 +1,32 @@
 {
-  "name": "productos",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-handlebars": "^6.0.6",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.5.2",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
+  },
+  "name": "express-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "container.js",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gonzabaleta/express-app.git"
+  },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.18.1"
-  }
+  "bugs": {
+    "url": "https://github.com/gonzabaleta/express-app/issues"
+  },
+  "homepage": "https://github.com/gonzabaleta/express-app#readme",
+  "description": ""
 }
