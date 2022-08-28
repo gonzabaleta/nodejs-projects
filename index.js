@@ -1,18 +1,17 @@
-import express from "express";
-import { engine } from "express-handlebars";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import mongoose from "mongoose";
-import model from "./models/user.js";
-import dotenv from "dotenv";
-import bcrypt from "bcrypt";
-import session from "express-session";
-import passport from "passport";
-import { Strategy } from "passport-local";
+const express = require("express");
+const { engine } = require("express-handlebars");
+const mongoose = require("mongoose");
+const model = require("./models/user.js");
+const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
+const session = require("express-session");
+const passport = require("passport");
+const { Strategy } = require("passport-local");
+const parseArgs = require("minimist");
+const { fork } = require("child_process");
 
 // Config dotenv && dirname
 dotenv.config();
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // config EXPRESS
 const app = express();
@@ -126,7 +125,33 @@ app.post("/register", async (req, res) => {
   res.redirect("/login");
 });
 
-const PORT = 3000;
+app.get("/info", (req, res) => {
+  const response = {
+    Args: parseArgs(process.argv.slice(2)),
+    SO: process.platform,
+    Version: process.version,
+    rss: process.memoryUsage(),
+    Path: process.title,
+    ID: process.id,
+    Directory: process.cwd(),
+  };
+
+  res.send(JSON.stringify(response));
+});
+
+app.get("/api/random", (req, res) => {
+  const amount = req.query.cant || 100000000;
+
+  const child = fork("./generateNumbers");
+  child.send(amount);
+  child.on("message", (numbers) => {
+    res.json(numbers);
+  });
+});
+
+// Configure PORT
+const args = parseArgs(process.argv.slice(2));
+const PORT = args.p || 8080;
 
 app.listen(PORT, (err) => {
   if (err) throw new Error(`Error de servidor ${err}`);
